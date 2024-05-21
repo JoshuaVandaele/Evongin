@@ -1,0 +1,11 @@
+[package]
+name = "evongin"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+nalgebra = "0.32.5"
+sdl2 = "0.36.0"
+
+[lib]
+path = "src/lib.rs"
