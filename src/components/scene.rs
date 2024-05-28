@@ -36,6 +36,10 @@ impl Scene {
         self.objects.push(object);
     }
 
+    pub fn add_collider(&mut self, collider: Box<dyn Collider>) {
+        self.colliders.push(collider);
+    }
+
     pub fn update(&mut self, delta_time: f32) {
         for object in &mut self.objects {
             object.update(delta_time);
