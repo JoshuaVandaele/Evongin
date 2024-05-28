@@ -9,7 +9,8 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new(surface: Surface<'static>, transform: Transform) -> Self {
+    pub fn new(width: u32, height: u32, transform: Transform) -> Self {
+        let surface = Surface::new(width, height, sdl2::pixels::PixelFormatEnum::RGB24).unwrap();
         let canvas = surface.into_canvas().unwrap();
         let canvas = RenderTargets::Surface(canvas);
         Self {
@@ -71,16 +72,5 @@ impl Object for Camera {
 
     fn as_any_mut(&mut self) -> &mut dyn std::any::Any {
         self
-    }
-}
-
-impl Default for Camera {
-    fn default() -> Self {
-        let surface = Surface::new(0, 0, sdl2::pixels::PixelFormatEnum::RGB24).unwrap();
-        let canvas = surface.into_canvas().unwrap(); // Convert Surface into Canvas
-        Self {
-            surface_canvas: RenderTargets::Surface(canvas),
-            transform: Default::default(),
-        }
     }
 }
