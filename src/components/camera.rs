@@ -19,7 +19,7 @@ impl Camera {
 impl Object for Camera {
     /// Draw the camera to the canvas
     fn draw(&self, canvas: &mut RenderTargets) {
-        let self_canvas = match canvas {
+        let self_canvas = match &self.canvas {
             RenderTargets::Window(_) => unimplemented!(),
             RenderTargets::Surface(surface) => surface,
         };
