@@ -7,6 +7,7 @@ use nalgebra::Vector2;
 use sdl2::pixels::Color;
 use sdl2::rect::Point;
 
+#[derive(Clone, Debug, Copy)]
 pub struct Rect {
     pub transform: Transform,
     pub width: f32,

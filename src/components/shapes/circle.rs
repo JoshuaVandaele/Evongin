@@ -6,7 +6,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::Point;
 use sdl2::render::RenderTarget;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Copy)]
 pub struct Circle {
     pub transform: Transform,
     pub radius: f32,
