@@ -3,7 +3,8 @@ use std::any::Any;
 use crate::components::colliders::{circlecollider::CircleCollider, polycollider::PolyCollider};
 
 use super::shape::Shape;
-pub trait Collider {
+
+pub trait Collider: Any {
     fn is_colliding_with_circle(&self, _circle: &CircleCollider) -> bool {
         false
     }
@@ -26,4 +27,12 @@ pub trait Collider {
 
     fn get_shape(&self) -> &dyn Shape;
     fn get_shape_mut(&mut self) -> &mut dyn Shape;
+
+    fn clone_box(&self) -> Box<dyn Collider>;
+}
+
+impl Clone for Box<dyn Collider> {
+    fn clone(&self) -> Box<dyn Collider> {
+        self.clone_box()
+    }
 }

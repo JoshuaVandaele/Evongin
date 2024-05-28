@@ -1,7 +1,8 @@
 use crate::components::transform::Transform;
+use crate::traits::object::Object;
 use crate::traits::poly::Poly;
-use crate::traits::render::Render;
 use crate::traits::shape::Shape;
+use crate::utils::render_targets::RenderTargets;
 use nalgebra::Vector2;
 use sdl2::pixels::Color;
 use sdl2::rect::Point;
@@ -24,8 +25,8 @@ impl Rect {
     }
 }
 
-impl Render for Rect {
-    fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
+impl Object for Rect {
+    fn draw(&self, canvas: &mut RenderTargets) {
         let vectors = self.get_points();
 
         let points: Vec<Point> = vectors
@@ -33,8 +34,24 @@ impl Render for Rect {
             .map(|vector| Point::new(vector.x as i32, vector.y as i32))
             .collect();
 
-        canvas.set_draw_color(self.color);
-        canvas.draw_lines(&points[..]).unwrap();
+        match canvas {
+            RenderTargets::Window(canvas) => {
+                canvas.set_draw_color(self.color);
+                canvas.draw_lines(&points[..]).unwrap();
+            }
+            RenderTargets::Surface(texture) => {
+                texture.set_draw_color(self.color);
+                texture.draw_lines(&points[..]).unwrap();
+            }
+        }
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn std::any::Any {
+        self
     }
 }
 

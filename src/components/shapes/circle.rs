@@ -1,9 +1,12 @@
 use crate::components::transform::Transform;
-use crate::traits::render::Render;
+use crate::traits::object::Object;
 use crate::traits::shape::Shape;
+use crate::utils::render_targets::RenderTargets;
 use sdl2::pixels::Color;
 use sdl2::rect::Point;
+use sdl2::render::RenderTarget;
 
+#[derive(Clone)]
 pub struct Circle {
     pub transform: Transform,
     pub radius: f32,
@@ -18,20 +21,18 @@ impl Circle {
             color,
         }
     }
-}
 
-impl Render for Circle {
-    fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
-        let x0 = (self.transform.position.x * self.transform.scale.x) as i32;
-        let y0 = (self.transform.position.y * self.transform.scale.y) as i32;
-
-        let radius = (self.radius * self.transform.scale.x) as i32;
-
+    fn draw_circle<T: RenderTarget>(
+        &self,
+        x0: i32,
+        y0: i32,
+        radius: i32,
+        canvas: &mut sdl2::render::Canvas<T>,
+    ) {
+        let mut err = 0;
         let mut x = radius;
         let mut y = 0;
-        let mut err = 0;
 
-        canvas.set_draw_color(self.color);
         while x >= y {
             canvas.draw_point(Point::new(x0 + x, y0 + y)).unwrap();
             canvas.draw_point(Point::new(x0 + y, y0 + x)).unwrap();
@@ -49,6 +50,36 @@ impl Render for Circle {
                 err += 1 - (x << 1);
             }
         }
+    }
+}
+
+impl Object for Circle {
+    fn draw(&self, canvas: &mut RenderTargets) {
+        let x0 = (self.transform.position.x * self.transform.scale.x) as i32;
+        let y0 = (self.transform.position.y * self.transform.scale.y) as i32;
+
+        let radius = (self.radius * self.transform.scale.x) as i32;
+
+        let x = radius;
+
+        match canvas {
+            RenderTargets::Window(canvas) => {
+                canvas.set_draw_color(self.color);
+                self.draw_circle(x0, y0, x, canvas);
+            }
+            RenderTargets::Surface(canvas) => {
+                canvas.set_draw_color(self.color);
+                self.draw_circle(x0, y0, x, canvas);
+            }
+        }
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn std::any::Any {
+        self
     }
 }
 

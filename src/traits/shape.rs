@@ -2,9 +2,9 @@ use nalgebra::Vector2;
 
 use crate::components::transform::Transform;
 
-use super::render::Render;
+use super::object::Object;
 
-pub trait Shape: Render {
+pub trait Shape: Object {
     fn set_transform(&mut self, transform: Transform);
 
     fn get_transform(&self) -> Transform;

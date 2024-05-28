@@ -1,6 +1,9 @@
 use nalgebra::Vector2;
 
-use crate::traits::{collider::Collider, physics::Physics};
+use crate::{
+    traits::{collider::Collider, object::Object, physics::Physics},
+    utils::render_targets::RenderTargets,
+};
 
 pub struct Rigidbody {
     pub gravity: Vector2<f32>,
@@ -35,5 +38,27 @@ impl Physics for Rigidbody {
 
     fn apply_force(&mut self, force: Vector2<f32>) {
         self.velocity += force;
+    }
+
+    fn clone_box(&self) -> Box<dyn Physics> {
+        Box::new(Self {
+            gravity: self.gravity,
+            velocity: self.velocity,
+            collider: self.collider.clone_box(),
+        })
+    }
+}
+
+impl Object for Rigidbody {
+    fn draw(&self, canvas: &mut RenderTargets) {
+        self.collider.get_shape().draw(canvas);
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn std::any::Any {
+        self
     }
 }

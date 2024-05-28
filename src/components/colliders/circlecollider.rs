@@ -57,4 +57,10 @@ impl Collider for CircleCollider {
     fn get_shape_mut(&mut self) -> &mut dyn crate::traits::shape::Shape {
         &mut self.circle
     }
+
+    fn clone_box(&self) -> Box<dyn Collider> {
+        Box::new(CircleCollider {
+            circle: self.circle.clone(),
+        })
+    }
 }

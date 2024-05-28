@@ -97,4 +97,8 @@ impl Collider for PolyCollider {
     fn get_shape_mut(&mut self) -> &mut dyn crate::traits::shape::Shape {
         self.poly.get_shape_mut()
     }
+
+    fn clone_box(&self) -> Box<dyn Collider> {
+        Box::new(self.clone())
+    }
 }
