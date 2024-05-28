@@ -4,7 +4,7 @@ use crate::utils::render_targets::RenderTargets;
 use sdl2::surface::Surface;
 
 pub struct Camera {
-    pub canvas: RenderTargets<'static>,
+    pub surface_canvas: RenderTargets<'static>,
     pub transform: Transform,
 }
 
@@ -12,14 +12,17 @@ impl Camera {
     pub fn new(surface: Surface<'static>, transform: Transform) -> Self {
         let canvas = surface.into_canvas().unwrap();
         let canvas = RenderTargets::Surface(canvas);
-        Self { canvas, transform }
+        Self {
+            surface_canvas: canvas,
+            transform,
+        }
     }
 }
 
 impl Object for Camera {
     /// Draw the camera to the canvas
     fn draw(&self, canvas: &mut RenderTargets) {
-        let self_canvas = match &self.canvas {
+        let self_canvas = match &self.surface_canvas {
             RenderTargets::Window(_) => unimplemented!(),
             RenderTargets::Surface(surface) => surface,
         };
@@ -68,5 +71,16 @@ impl Object for Camera {
 
     fn as_any_mut(&mut self) -> &mut dyn std::any::Any {
         self
+    }
+}
+
+impl Default for Camera {
+    fn default() -> Self {
+        let surface = Surface::new(0, 0, sdl2::pixels::PixelFormatEnum::RGB24).unwrap();
+        let canvas = surface.into_canvas().unwrap(); // Convert Surface into Canvas
+        Self {
+            surface_canvas: RenderTargets::Surface(canvas),
+            transform: Default::default(),
+        }
     }
 }

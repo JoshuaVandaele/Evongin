@@ -52,7 +52,7 @@ impl Scene {
 
     pub fn draw(&mut self, canvas: &mut Canvas<sdl2::video::Window>) {
         for object in &self.objects {
-            object.draw(&mut self.camera.canvas);
+            object.draw(&mut self.camera.surface_canvas);
         }
 
         let mut render_target = RenderTargets::Window(canvas);
